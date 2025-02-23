@@ -1,0 +1,327 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Poppins:wght@200;300;400;500;600;700&display=swap"
+      rel="stylesheet"
+    />
+
+<style>*,*::before,*::after {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+    font-family: 'Poppins', 'sans-serif';
+}
+/* ................ */
+#themeToggle {
+    margin-bottom: auto;
+    font-size: 1.5rem;
+    padding: 10px 20px;
+    border: none;
+    border-radius: 10px;
+    background-color: #222; /* Default Dark Mode */
+    color: white;
+    cursor: pointer;
+    transition: 0.3s ease-in-out;
+    box-shadow: 2px 2px 10px rgba(0, 0, 0, 0.2);
+}
+
+/* Dark Mode */
+.dark-mode #themeToggle {
+    background-color: #111; /* Darker Grey for Dark Mode */
+}
+
+/* Grey Mode */
+.grey-mode #themeToggle {
+    background-color: grey; /* Light Grey for Grey Mode */
+    color: black;
+}
+
+/* ................... */
+
+
+/* Change button color in dark mode */
+.dark-mode #themeToggle {
+    background-color: #444; /* Dark button for dark mode */
+    color: white;
+}
+
+/* DARK MODE GREY MODE ME SHIFT KRNA */
+
+body.dark-mode {
+    background-color: #222;
+    color: white;
+}
+
+body {
+    background-color:grey;
+    color: black;
+    transition: 0.3s ease-in-out;
+}
+
+
+/* Box styling for both modes */
+.box {
+    border: 2px solid black;
+    color: black; /* Ensure X and O are visible in light mode */
+    font-size: 2rem; /* Make X and O more visible */
+    font-weight: bold;
+    text-align: center;
+    line-height: 50px; /* Adjust based on box size */
+}
+
+.dark-mode .box {
+    border-color: white;
+    color: white; /* Ensure X and O are visible in dark mode */
+}
+/* .................. */
+
+.wrapper{
+    width: 100vw;
+    height: 100vh;
+    
+    background-size: cover;
+    background-position: center;
+    display: grid;
+    place-items: center;
+}
+
+.game-info{
+    color:white;
+    position:absolute;
+    top:3rem;
+    left:50%;
+    transform:translateX(-50%);
+    background-color: rgba(255, 255, 255, 0.15);
+    border-radius: 1rem;
+    border: 1px solid rgba(255, 255, 255, 0.25);
+    padding: 0.5rem 3rem;
+    /* text-align:center; */
+
+}
+
+.tic-tac-toe{
+    width:90%;
+    max-width:20rem;
+    background-color: rgba(255, 255, 255, 0.15);
+    border-radius: 1rem;
+    border: 1px solid rgba(255, 255, 255, 0.25);
+    padding: 2rem;
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    aspect-ratio: 1/1;
+}
+
+
+.box{
+    position:relative;
+    width:100%;
+    aspect-ratio: 1/1;
+    cursor: pointer;
+    font-size: 3rem;
+    color:white;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.box1, .box2, .box4, .box5{
+    border-right:2px solid white;
+    border-bottom:2px solid white;
+}
+
+.box3, .box6{
+    border-bottom: 2px solid white;
+}
+
+.box7, .box8{
+    border-right:2px solid white;
+}
+
+.btn{
+    color:white;
+    position: absolute;
+    bottom:3rem;
+    left:50%;
+    transform:translateX(-50%);
+    background-color: rgba(255, 255, 255, 0.15);
+    border-radius: 1rem;
+    border: 1px solid rgba(255, 255, 255, 0.25);
+    padding: 0.5rem 2rem;
+    cursor:pointer;
+    display: none;
+}
+
+.btn.active{
+    display: flex;
+}
+
+.win{
+    background-color: rgba(0, 255, 0, 0.3);
+}
+
+</style>
+</head>
+<body>
+    
+    <div class="wrapper">
+
+        <p class="game-info"></p>
+        <br>
+
+        <div class="tic-tac-toe">
+            <div class="box box1"></div>
+            <div class="box box2"></div>
+            <div class="box box3"></div>
+            <div class="box box4"></div>
+            <div class="box box5"></div>
+            <div class="box box6"></div>
+            <div class="box box7"></div>
+            <div class="box box8"></div>
+            <div class="box box9"></div>
+        </div>
+
+        <button class="btn">New Game</button>
+        <button class="button" id="themeToggle">😁</button>
+       
+        
+
+    </div>
+    <script >
+        const boxes = document.querySelectorAll(".box");
+const gameInfo = document.querySelector(".game-info");
+const newGameBtn = document.querySelector(".btn");
+
+// Sound effects
+const clickSound = new Audio("clicksound.mp3"); // Add a "click.mp3" file in your project
+const winSound = new Audio("winningsound.mp3"); // Add a "win.mp3" file in your project
+const tieSound = new Audio("tie.mp3"); // Sound for game tie
+
+const themeToggle = document.getElementById("themeToggle");
+
+themeToggle.addEventListener("click", () => {
+    if (document.body.classList.contains("dark-mode")) {
+        document.body.classList.remove("dark-mode");
+        document.body.classList.add("grey-mode");
+        themeToggle.innerText = "☁"; // Grey mode icon
+    } 
+     else {
+        document.body.classList.add("dark-mode");
+        themeToggle.innerText = "🌚"; // Dark mode icon
+    }
+});
+
+
+
+
+
+
+
+let currentPlayer;
+let gameGrid;
+
+const winningPositions = [
+    [0,1,2],
+    [3,4,5],
+    [6,7,8],
+    [0,3,6],
+    [1,4,7],
+    [2,5,8],
+    [0,4,8],
+    [2,4,6]
+];
+
+// Initialize the game
+function initGame() {
+    currentPlayer = "X";
+    gameGrid = ["","","","","","","","",""];
+
+    boxes.forEach((box, index) => {
+        box.innerText = "";
+        boxes[index].style.pointerEvents = "all";
+        box.classList = `box box${index+1}`;
+    });
+
+    newGameBtn.classList.remove("active");
+    gameInfo.innerText = `Current Player - ${currentPlayer}`;
+}
+
+initGame();
+
+function swapTurn() {
+    currentPlayer = currentPlayer === "X" ? "O" : "X";
+    gameInfo.innerText = `Current Player - ${currentPlayer}`;
+}
+
+function checkGameOver() {
+    let answer = "";
+
+    winningPositions.forEach((position) => {
+        if (gameGrid[position[0]] !== "" &&
+            gameGrid[position[0]] === gameGrid[position[1]] &&
+            gameGrid[position[1]] === gameGrid[position[2]]) {
+
+            answer = gameGrid[position[0]];
+            
+            // Disable further clicks
+            boxes.forEach((box) => box.style.pointerEvents = "none");
+
+            // Highlight winning boxes
+            boxes[position[0]].classList.add("win");
+            boxes[position[1]].classList.add("win");
+            boxes[position[2]].classList.add("win");
+
+            // Play winning sound
+            winSound.play();
+        }
+    });
+
+    if (answer !== "") {
+        gameInfo.innerText = `Winner Player - ${answer}`;
+        newGameBtn.classList.add("active");
+        return;
+    }
+
+    // Check for a tie
+    if (gameGrid.every(box => box !== "")) {
+        gameInfo.innerText = "Game Tied!";
+        newGameBtn.classList.add("active");
+
+        // Play tie sound
+        tieSound.play();
+    }
+}
+
+
+
+
+function handleClick(index) {
+    if (gameGrid[index] === "") {
+        // Play click sound
+        clickSound.play();
+        
+        boxes[index].innerText = currentPlayer;
+        gameGrid[index] = currentPlayer;
+        boxes[index].style.pointerEvents = "none";
+        
+        swapTurn();
+        checkGameOver();
+    }
+}
+
+boxes.forEach((box, index) => {
+    box.addEventListener("click", () => handleClick(index));
+});
+
+newGameBtn.addEventListener("click", initGame);
+
+    </script>
+</body>
+</html>
